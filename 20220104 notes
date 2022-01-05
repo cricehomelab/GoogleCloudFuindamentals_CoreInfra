@@ -1,0 +1,185 @@
+
+Intro Module (VERY high level)
+
+GCP = Google Cloud Platform
+
+4 main services from google cloud
+Compute
+Storage
+Big Data
+Machine Learning
+
+This course is predominately focused on 
+Compute and Storage
+As well as Networking 
+
+What is cloud computing:
+composed of 5 equally important traits.
+1. On-demand self-service (No human intervention required).
+	All services able to be obtained through an interface. 
+2. Broad network access (access from anywhere).
+3. Resource pooling (provider shares resources to customers).
+	Big pool of resources, to unlock economical scaling for provider to make profit and save customer money. 
+	Exact physical location not required knowledge for customer.  
+4. Rapid Elasticity (Get more resources quickly as needed).
+	Able to scale up/back at a moments notice. 
+5. Measured service (Pay only for what is consumed). 
+
+How did it get here
+Phase 1 - Colocation - user configured and managed spaces in a single location run by several companies sharing the space/expenses. 
+Phase 2 - Virtualization - similar to colocation but adding virtual devices separately managed from the base hardware. 
+Phase 3 - Serverless - services automatically provision and configure the infrastructure for applications. 
+
+GCP Computing architectures
+More like managed infrastructure
+	Compute Engine (IaaS Infrastructure as a Service) - Pay for what you alocate
+	Kubernetes Engine (Hybrid)
+	App Engine (PaaS Platform as a Service) - Pay for what you use
+	Cloud Functions (Serverless Logic)
+	Managed Services (Automated Elsatic Resources)
+More like Dynamic Infrastructure
+
+GCP Reigons and Zones
+
+Multi-Region - things can be stored accross multiple different reigions (with at least 160 km between centers)
+	This is also useful in establishing redundancies. 
+
+Region - a group of Zones. All Zones within a Region have low latency between each other. 
+	It is possible to build accross multiple regions as well. This accomplishes 2 things. 
+		1. Make services more accessible for customers of an app/software hosted in GCP
+		2. protect against potential loss of an entire region due to a service outage. 
+	As of the time of this course there are 15 regions in GCP.
+		29 regions as of 2022-01-04
+
+Zone - a deployment area 
+	example running a compute engine runs in a specified zone. a Zone does not always correspond to a single physical building. 
+	A Zone can be thought of as a single failure domain within a Region. 
+	When building within a region resources can be spread accross multiple zones to build fault tollerance. 
+	
+Trivia 
+	GCP is 100% Carbon neutral since 2007. 
+	First data centers to achieve ISO 14001 certification. 
+
+cost trivia
+	Billing is offered per second of use for compute, data processing and other services
+	Discounts for use over 25% of a month are automatically applied. 
+	Discounts for less steady long term work loads
+	Discounts applied for interuptible work loads
+	Custom VM Instance types only charged for the resources necesary for an application. 
+
+Open APIs
+	GCP database services are compatible with open source databases.
+	GCP utilizes open sources licenses for additional portability to other platforms.
+
+
+
+IAM and resource permissions
+
+	
+Multi layer Security approach
+
+Operational security		^	Intrusion Detection systems, insider risk systems to protect against rogue Google employees. Employee U2F
+							|	secure software development process. red team practices (active hacking excercises).
+Internet communication		|	Google Front End bakes in a DDoS protections. Checks for best practices (certificates etc.)
+Storage services			|	Encyrption while data is stored and not in use. Hardware encryption via SSDs.  
+User Identity				|	Central idenity service with support for U2F. Additional layers of security like looking for if someone has 
+							|	logged in from a given device before. 
+Service deployment			|	Encryption of itner-service communication.
+Hardware infrastructure		|	Hardware designed custom made servers and chipsets. Datacenters are custom designed and access heavily restricted. 
+								crytpographic communication RPC traffic and data services automatically encrypted between datacenters. 
+
+
+Tools to actively monitor costs of GCP services. 
+	Budgets and alerts - can be defined per account or per GCP project. This can be fixed or tied to other metrics. Alerts can be created when 
+						 budget is close to being exceeded. default budget alerts is 50%, 90% and 100%. 
+	Billing exports - lets you store detailed billing info in easy to access locations. 
+	Reports - visual tool to monitor expenditure. 
+	Quotas - protect account owners and GCP. Many quotas are able to be changed on request. 
+			Rate quota - resets after a fixed period of time. 
+			Allocation quota - governs the number of resources per project. 
+
+
+
+Projects - organizational unit for different initiatives in GCP. 
+		   Group together related resources with similar business objectives.
+		   
+Identity and Access Management (IAM)  - to control access of who gets access to what. 
+										least privileged access - each user should have only the necessary privileges to do their job. 
+										4 ways to interact with this
+											web console
+											SDK and CLI tools
+											via APIs
+											mobile app
+
+on premises care is responsible for all security
+IaaS moves most of the lower layers (physical/hardware security as well as base software access) to be Google's responsibility
+PaaS moves some more of the software responsibilities over to google. 
+Managed services moves an even larger segment of responsibilities out of customer hands and puts the responsibility to google. 
+
+
+The value proposition of this increased security is that through google's scale it can deliver a higher level of security then most could
+provide on their own. 
+
+
+
+GCP Resource hierarchy:
+
+Top of hierarchy	^	All folders and projects can be brought under an organization. 
+					|	Folders can contain other folders with projects within them as well. 
+					|	Projects can be organized into folders.
+bottom of hierarchy |	All tools and resources in GCP are organized into projects.
+
+Policies inherit downwards in the hierarchy
+
+Resources should be grouped according to organizational structure. 
+Levels of hierarcy provide tust boundaries and resource isolation. 
+
+Projects are the basis of using services in GCP	
+	enable resource tracking and quota usage
+	enable billing
+	manage permissions and credentials
+	enable services and APIs
+
+Projects have 3 identiable attributes. 	
+1. project ID			Globally Unique					Chosen by user		 Immutable	
+2. project name			Does not need to be unique		Chosen by user		 Mutable
+3. Project Number		Globally Unique					Assigned by GCP		 Immutable
+
+
+Folders are usable but not required. 
+They are an abstraction tool designed to enable better clustering of projects that share a common goal within a system. 
+	The resources in a folder inherit IAM policies from the folder it is contained within (recursive). 
+	This helps remove the need to put duplicate policies on 2 different folders. 
+	To use folder you MUST have an organization node at the top of the hierarchy. 
+			Organization 	is the root node for google cloud resources. 
+							allows centralized visibility for how resources are being used. 
+		Organization admin  policy administrator has broad control of all cloud resources.
+		Project creator 	has fine grained congrol of project creation.
+
+GSuite customers (If you own a domain through google) will organize projects under that domain. 
+IAM will allow you to create an organization. 
+
+When creating an organization there is open access to create projects and allocate resources to prevent work being impeded. 
+It should be a first step to set up hierachy and control who can and who cannot create projects and allocate resources. 
+
+Example 
+A policy is set on a resource
+	Each policy contains a set of roles and role members.
+Resources inherit policies from a parent. 
+	Resource policies are a union of parent and resource. 
+A less restrictive parent policy OVERRIDES a more restrictive resource policy. 
+(The more generous policy overrides the less restrictive policy)
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
