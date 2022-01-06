@@ -73,18 +73,24 @@ Open APIs
 
 
 
-IAM and resource permissions
+IAM Security and Resource Permissions
 
 	
 Multi layer Security approach
 
 Operational security		^	Intrusion Detection systems, insider risk systems to protect against rogue Google employees. Employee U2F
 							|	secure software development process. red team practices (active hacking excercises).
+							|
 Internet communication		|	Google Front End bakes in a DDoS protections. Checks for best practices (certificates etc.)
+							|
 Storage services			|	Encyrption while data is stored and not in use. Hardware encryption via SSDs.  
+							|
 User Identity				|	Central idenity service with support for U2F. Additional layers of security like looking for if someone has 
+							|
 							|	logged in from a given device before. 
+							|
 Service deployment			|	Encryption of itner-service communication.
+							|
 Hardware infrastructure		|	Hardware designed custom made servers and chipsets. Datacenters are custom designed and access heavily restricted. 
 								crytpographic communication RPC traffic and data services automatically encrypted between datacenters. 
 
@@ -125,8 +131,11 @@ provide on their own.
 GCP Resource hierarchy:
 
 Top of hierarchy	^	All folders and projects can be brought under an organization. 
+					|
 					|	Folders can contain other folders with projects within them as well. 
+					|
 					|	Projects can be organized into folders.
+					|
 bottom of hierarchy |	All tools and resources in GCP are organized into projects.
 
 Policies inherit downwards in the hierarchy
@@ -162,13 +171,149 @@ IAM will allow you to create an organization.
 When creating an organization there is open access to create projects and allocate resources to prevent work being impeded. 
 It should be a first step to set up hierachy and control who can and who cannot create projects and allocate resources. 
 
-Example 
+Example: 
 A policy is set on a resource
 	Each policy contains a set of roles and role members.
 Resources inherit policies from a parent. 
 	Resource policies are a union of parent and resource. 
 A less restrictive parent policy OVERRIDES a more restrictive resource policy. 
 (The more generous policy overrides the less restrictive policy)
+
+
+IAM allows administrators to define WHO can do WHAT on WHICH Resource.
+
+Who - defined by google account, google group, gsuite domain, service account, cloud identity domain.
+What - is defined by IAM Role
+		IAM Role - a collection of permissions.
+		Because doing any one function requires a number of different permissions an IAM Role enables an admin to set up a 
+		user with a Role or Roles to allow them to do their job and make it easier for the admin to manage.
+		
+There are 3 kinds of Roles in Cloud IAM
+	Primitive - Broad rules applied to a GCP project and they affect all resources within the project. 
+				Owner - invite members, remove members, delete projects and... (owner can also do the billing administrator role)
+				Editor - Deploy application, modify code, configure services and...
+				Viewer - read-only access. 
+				Billing Administrator - manage billing and add/remove administrators. 
+		A project can have multiple owners, editors, and billing administrators. 
+	Predefined - roles apply to a particular GCP service in a project. 
+	Custom - mentioned but not gone into detail. 
+
+IAM Roles - 
+
+Example Role:
+Compute Engine Instance admin Role allows
+	compute.instances.delete
+	compute.instances.get
+	compute.instances.list
+	compute.instances.setMachineType
+	compute.instances.start
+	compute.instances.stop
+This Role can be applied to a group and that group can have these rules applied to a folder or project. 
+
+Custom roles - a custom role can be created to fit with an organizations specific least privileged model
+
+example custom role
+Applied to a particular group that applies to a specific project
+named: InstanceOperator
+Permissions	compute.instances.get
+			compute.instances.list
+			compute.instances.start
+			compute.instances.stop
+
+Custom role caveats:
+				1. Custom roles must be manually defined.
+				2. Custoom rolse may only be used at the project or organization level, and cannot be used at the folder level. 
+				
+Service accounts - control server to server interactions
+	- provide an identity for carrying out server-to-server interactions in a project
+	- Used to authenticate from one service to another
+	- Userd to control privileges used by resources
+		-sot that application can do things for authenticated end users. 
+	- service accounts are identified with an email address:
+			Example: PROJECT_NUMBER-compute@developer.gserviceaccount.com
+					 PROJECT_ID@appspot.gserviceaccount.com
+
+	- service account use crptographic keys to authenticate. 
+		- google manages these keys for the Compute Engine and the App Engine.
+	- Predefined or custom IAM role can be assigned to the service account. 
+
+Different VMs in a project can be granted different Identities in order to manage different permissions for each group.
+The permissions for the service accounts can be changed without having to rebuild the VMs. 
+creating different permissions can prevent miscoded applications or compromised VMs from wreaking havoc on the system at large. 
+
+
+Interacting with Google Cloud Platform		
+
+4 ways to interact with GCP
+1. Cloud Platform Console - Web user interface
+	create and manage projects
+	access to GCP APIs
+	access to Cloud Shell		
+2. Cloud Shell and Cloud SDK - Command Line interface
+	Cloud Shell is a non-persistant VM with google cloud SDK installed
+	GCP SDK (Software Development Kit) has command line toolsl for GCP products and services
+		gcloud - primary CLI interface for google cloud. 
+		gsutil (Cloud storage) - 
+		bq (Big Query) - 
+	This is accessed by clicking the Cloud Shell icon on the GCP console.
+	The SDK can be installed on laptops, on premise servers, and VMs in other clouds etc. (Also available as a Docker image)
+		SDK Composed of RESTful APIs (REST = Representational State Transfer Paradigm)
+			- programatic access to products and services
+				- JSON as an interchange format
+				- OAuth 2.0 for authentication/authorization
+			- Enabled through GCP Console
+				- Most APIs are off by default. 
+				- Most APIs include daily quotas and rates (limits) that can be raised if requested. (Plan ahead to manage required capacity)
+				- API Explorer https://cloud.google.com/apis/
+
+3. Cloud Console Mobile app - iOS and Android
+4. REST-based API - for custom applications. 
+	APIs Explorer
+		- Interactive tool that allows one to try google APIs in the browser
+		- things you can do:
+			- Browse through available APIs and versions of an API
+			- See methods available for each API and what parameters are supported (and built in documentation)
+			- Execute requests for any method and see real time responses. 
+			- Make authenticated and authorized API calls. 
+			
+	Client Libraries to control GCP resources from within code
+		- Cloud Client Libraries (Community owned hand-crafted client libraries)
+			- Observation these can get very specific.
+		- Google API client libraries
+			- Open source generated
+			- Support for multiple languages (Java, Python, Javascript, PHP, .NET, Go, Node.js, Ruby, Objective-C, Dart)
+			- Observation these are more general use and broad.
+
+
+Cloud Marketplace (used to be CloudLauncher)
+	- tool for quickly deploying functional software packages on GCP. 
+	- some are google and others are made by 3rd party vendors. 
+		- third party tools may charge monthly fees. 
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
