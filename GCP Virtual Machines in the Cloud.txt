@@ -51,9 +51,119 @@ Preemptible VM - a VM that is able to be terminated by google if the resources a
 	- its important to design the job to be able to be stopped/restarted
 	
 Make large VMs for memory and compute intensive applications
+Make many VMS for fault tolerance and elasticity
 
 Autoscalling can be used for resliliancy and scalable applications.
 	- allows to automatically add/remove VMs based on load metrics. 
+
+
+
+VPCs have routing tables
+Routing table can be used to forward traffic in the network and accross subnets (Without requiring an external IP address). 
+Routing tables are built in
+VPC's do not need to have a firewall built in, and provide a global distributed firewall. able to control incoming and 
+outgoing traffic.
+
+Firewall rules defined in the form of metadata tags and can tag VM Instances with this.
+Example 
+Tag all webservers with a "Web" tag and allow devices with this tag to be able to send/receive through port 80 and 443
+
+Shared VPC - share a network or individual subnets with other GCP projects. 
+	Leverages IAM for who and what in project x can interact with what in project y
+VPC Peering - allows interconnection of networks in GCP projects. 
+	peering between 2 VPCs
+	
+
+Global Cloud Load Balancing - allows an application to present a single front end to the world
+	- users get single, global anycast IP address
+	- Traffic moves over the google backbone network from the closest Point Of Presence (POP) to the user.
+	- Backends are selected based on load.
+	- Only healthy backends receive traffic.
+	- No pre-warming required.
+
+
+Load balancing options in GCP
+
+Global HTTP(S)			Layer 7 Load Balancing 		Can route different URLS
+						based on load				to different Backends
+
+Global SSL Proxy		Layer 4 load balancing		Supported on specific port
+						of non-HTTPS SSL traffic	numbers
+						based on load
+
+Global TCP Proxy		Layer 4 load balancing		Suppored on specific port	
+						of non-SSL TCP traffic		numbers
+
+
+Regional				Load balancing of any		Supported on any port #
+						Traffic (TCP, UDP)
+
+Regional Internal		Load balancing of 			Use for internal tiers of
+						traffic inside a VPC		multi tiered application
+						
+
+Google DNS 8.8.8.8 (free google DNS service)
+
+Cloud DNS = create managed zones then add/edit/delete DNS records. 
+
+Cloud CDN (Content Delivery Network)
+	- uses google's globally distributed edge caches to cache content close to users. 
+	- check box after HTTPS load balancing is configured. 
+
+
+GCP interconntect options
+- VPN - Secure multi-Gbps connection over vpn tunnels
+		- Cloud Router makes this dynamic allows other networks and Google VPC exchange route info using Boarder 
+		Gateway Protocol. 
+		- with Cloud router configured if a new subnet is added to the a google VPC on prem will get routes to it 
+		automatically. 
+- Direct Peering - Private Connection between you and Google for hybrid cloud workloads
+		- involves putting a router in a public data center as a Google POP to exchange traffic. 
+- Carrier Peering - connection through partner network of service providers.
+		- Similar to Direct Peering, but goes through a Google Partner. 		
+- Dedicated Interconnect - Connect N X 10G transport circuits for private cloud traffic to GCP at Google POPSs
+		- Peering is not covered by an SLA, but this is. 
+		- Can be covered by a google SLA depending on Topology. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
