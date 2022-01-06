@@ -1,0 +1,62 @@
+GCP Virtual Machines in the Cloud
+
+Compute Engine - the name of the service that allows Virtual Machines to be run in GCP. 
+
+Objective:
+Focus of this course is how Google Compute Engine works (especially with Virtual Networking)
+
+Virtual Private Cloud (VPC)
+
+- Each VPC Network is contained in a GCP Project
+- When you provision GCP resources you can connect them to each other or isolate them from each other. 
+
+The VPC networks are global
+The VPC subnets are regional
+
+You are able to dynamically increase the size of a subnet in a custom network by expanding the range of IP addresses allocated to it. This will
+not affect currently configured VMs.
+
+
+Compute Engine:
+
+advantages
+	 - no upfront cost
+	 - Fast consistant performance
+	 
+These can be created 2 ways 	GCP console
+								gcloud command line
+
+The VMs can run Windows Server or Linux
+	Images can be out of box images
+	premade by Google/Community
+	Imported from exisiting physical servers
+	
+When creating able to configure how much memory and how many CPUs you need
+	- also able to add GPUS if needed. 
+	
+able to choose 2 types of persistant disks
+	standard
+	SSD
+
+You can attach a local SSD for scratch space (data is not persistant so important data needs to be permanently stored somewhere else)
+
+Startup Scripts can be defined. 
+
+Disk Snapshots can be taken
+	- usable as backups
+	- usable to migrate to baremetal/other regions
+	
+Preemptible VM - a VM that is able to be terminated by google if the resources are needed elsewhere
+	- Use case is if there is a large work load with no immeadiate need to be looked at by a person. 
+	- its important to design the job to be able to be stopped/restarted
+	
+Make large VMs for memory and compute intensive applications
+
+Autoscalling can be used for resliliancy and scalable applications.
+	- allows to automatically add/remove VMs based on load metrics. 
+
+
+
+
+
+
