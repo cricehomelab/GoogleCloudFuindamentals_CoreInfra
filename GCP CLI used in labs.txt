@@ -55,3 +55,34 @@ sudo service apache2 restart
 
 
 
+Kubernetes commands
+
+GCP CLI for defining an environment variable for a prefered zone
+export MY_ZONE=us-central1-a
+
+GCP CLI to create a cluster named webfrontend with 2 nodes in the preferred zone. 
+gcloud container clusters create webfrontend --zone $MY_ZONE --num-nodes 2
+
+checking the version of kubernetes
+kubectl version
+
+launch a single instance of nginx
+kubectl create deploy nginx --image=nginx:1.17.10
+
+view the pod running in the nginx container
+kubectl get pods
+
+expose the container to the internet
+kubectl expose deployment nginx --port 80 --type LoadBalancer
+
+view services for kubernetes
+Kubectl get services
+
+scale number of pods to 3
+kubectl scale deployment nginx --replicas 3
+
+
+
+
+
+

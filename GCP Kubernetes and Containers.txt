@@ -1,1 +1,173 @@
-jkl
+CGoogle Cloud Containers in the cloud
+
+
+Kubernetes Engine
+	- like an IaaS as it saves on infrastructure chores that need done. 
+	- like a PaaS as it was built with the needs of devs in mind. 
+
+
+Introduction to Containers
+	- IaaS allow sharing of hardware by virtualizing hardware offerings.
+		- cost smallest unit of compute is the VM. 
+	- with success you need to add additional VM's even big VM's to allow for more use by more users. 
+	- containers allow for
+		- independant scalability of workloads (like PaaS comperable to AppEngine tool in GCP)
+		- allows for the abstraction of OS and Hardware (Like IaaS think Compute Engine)
+	- Containers - an 'invisible box' around code and its depencies with limited access to File system and Hardware
+	- Process - instance of a runnig program. 
+	- Container starts as quickly as a process (IE much faster than booting up a new machine virtual or otherwise)
+	- Requirement 
+		- OS that supports containers
+		- Container runtime
+	- This is essentially virutalizing the OS instead of the hardware. 
+	- Containers make code very portable, OS/Hardware becomes irrelevent. 
+	- Able to move code from device to device without reconfigurations.
+
+In general one builds an app with lots of containers that each perform their own functions. 
+	- microservices
+	- units of code can communicate over mesh network
+	- this makes code modular, easy to deploy and scale independently accross multiple hosts.
+	- Kubernetes is a tool that:
+		- manages containers accross a number of hosts
+		- scales containers appropriately
+		- upgrade container versions
+		- roll back old container versions
+	
+Building and running containers
+	- Containers are built generally using the standards set by the Docker tool (Open source standard). 
+	- Cloud Build - a google managed service for building containers.
+
+
+Kubernetes and Kubernetes engine
+- Kubernetes is a container orchastrator
+- It allows authorized parties to control its operations.
+- It allows for the deployment of containers on a set of nodes called a cluster
+- Cluster - a set of master components that control the system, and nodes that run containers.
+	- node - represents a computer instance. 
+		- in GCP they are VMs running in Compute Engine. 
+
+- Pod - an abstraction layer for a set of containers or a set of related containers
+	- smallest deployable unit in Kubernetes.
+	- can be thought of as a running process on a cluster. 
+	- possible to have one container in a pod or if you have multiple containers with a hard dependancy you can package
+	all of those containers into a pod. 
+	
+- kubectl run - one possible command to deploy a pod. 
+	-this starts a deoployment of a pod in it. 
+	-example command "kubectl run nginx --image=nginx:1.15.7"
+		-will fetch an image of nginx for a specified version from a container registry. 
+
+- a deployment represents a group of replicas of the same pod. 
+	- It keeps pods running even if a node fails. 
+	- A deployment can contain all or part of an application. 
+
+- to get the status of a deployment the command "kubectl get pods" can be run
+
+- by default pods are not available to the outside network, but can be made avilable by the command
+"kubectl expose deployments <name> -port=<port#> --type=LoadBalancer"
+for the nginx example above it could be
+"kubectl expose deployments nginx --port=80 --type=LoadBalancer"
+
+Service - groups a set of pods together and provides a stable endpoint. 
+	- example a public Ip address managed by a network load balancer
+	- services are needed because alothough pods have an ip address that could be accessed the pods may be created/destroyed
+	and their IP addresses do not remain stable. Services route the requests to available pods. 
+	- "kube ctl get services" - command that shows services public IPs, cluster ip ports and age of the service
+	- to scale a deployment like the nginx one above "kubectl scale nginx --replicas=3
+		- this creates 3 instances of the nginx webserver behind the service 
+	- autoscaling with kubernetes
+		-"kubectl autoscale nginx --min=10 --max=15 --cpu=80" command to scale based on CPU usage. 
+
+working with Kubernetes in a Declarative manner
+	- instead of issueing commands you can provide a configuration file
+		- within configuration file you tell Kubernetes how you want your system to run, and Kubernetes determines how to do this 
+		and executes to the specified parameters.
+		- to get a starting point to build a configuration file you can request the yaml file from a deployment. 
+			- "kubectl get pods -1 "app=nginx" -o yaml"
+			- output of commands like the one above can be edited to a configuration file, and set to configure a Kubernetes deployment
+			- can be saved in a version control system to keep track of previous configurations of kubernetes. 
+	- once a configuration file has been edited you can apply it with a command like below
+		- "kubectl apply -f nginx-deployment.yaml"
+
+Update strategy of a deployment 
+	- rather than immediately updating everything you can define a strategy to systematically upgrade containers
+		- this helps to minimize/eliminate downtime. 
+	- rolling update
+		- create pods of update one by one, wait for new pod to become available before destroying an old pod. 
+
+
+Introduction to Hybrid and Multi-Cloud computing (Anthos)
+
+Distributed systems housed on-premises is the traditional approach but it lacks flexibility and agility. 
+	- this is the idea of using 2 or more servers to distribute the workloads
+	- Containerization allows this to happen with further abbstraction, clustering the servers and containerizing "microservices" to 
+	be able to do the work that was previously dedicated specific servers. 
+	- housing on premises presents potential hardware limitations and scalability issues. (IE resources RAM, HDD, processing, start to
+	become depleted and additional hardware needs to be added before the application can work effectively again). 
+	- The cost and the lifespan of the hardware is relatively short. 
+
+Hybrid approach
+	- allows for on cloud only services to be accessed. 
+	- moves only some of computing workload to the cloud. 
+	- able to move at a self-directed pace
+	- Take advantages of cloud scalability and potentially lower costs.
+	- Add specialized services to computing resource stack. 
+	
+Anthos is the Google solution for hybrid and multi-cloud systems and services management.
+	- Kubernetes and GKE On-Prem create the foundation
+	- On-premises and cloud environments can stay synchronized
+	-provided tools for:
+		- Managing services on-premises and in the cloud
+		- monitoring systems and services. 
+		- Migrating applications from VMs into your clusters
+		- Maintaing consistant policies accross all clusters regardless of where they are (on premises, in the GCP cloud, or in other clouds.). 
+		
+
+Building a modern hybrid cloud workflow. 
+
+Google Kubernetes Engine (GKE)in the cloud. 
+Google Kubernetes Engine can be deployed on premises. 
+Both GKE-Cloud and GKE-On-prem integrate with GCP Marketplace
+	- all clusters in cloud or on prem have access to the same repository of containerized applications. 
+		- same configurations can be used on both sides of the network.
+	
+In the cloud Anthos Service Mesh can be used to montiro the health of microservices
+On-premises Istio Open Source Service mesh can be used.
+BOTH of these services integrate in Cloud Interconnect service to monitor health of GKE instances on cloud and on-premises. 
+	-these sync and pass data between cloud and on-premises
+
+StackDriver - is a logging and monitoring tool that can be used with on-premises and cloud tools. 
+
+Policy Repository - On premises tool or cloud tool that syncs with cloud tool (Anthos Config Management) these tools in conjunction keep a 
+single source of truth for configuration between cloud and on-prem
+	- Public Repository - a Git repository. 
+	- allows to update code with a single repository commit. 
+
+
+
+
+
+
+
+
+	
+
+		
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
