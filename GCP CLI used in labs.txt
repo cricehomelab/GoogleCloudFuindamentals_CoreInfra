@@ -1,0 +1,57 @@
+Blog lab
+
+google cloud command line to create VM for the lab with startup script for installing apache webserver. 
+
+gcloud compute instances create bloghost --project=qwiklabs-gcp-01-d4c808c804ee --zone=us-central1-a --machine-type=e2-medium --network-interface=network-tier=PREMIUM,subnet=default --metadata=startup-script=apt-get\ update$'\n'apt-get\ install\ apache2\ php\ php-mysql\ -y$'\n'service\ apache2\ restart --maintenance-policy=MIGRATE --service-account=398584050220-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --tags=http-server --create-disk=auto-delete=yes,boot=yes,device-name=bloghost,image=projects/debian-cloud/global/images/debian-9-stretch-v20211209,mode=rw,size=10,type=projects/qwiklabs-gcp-01-d4c808c804ee/zones/us-central1-a/diskTypes/pd-balanced --reservation-affinity=any
+
+
+GCP command lines used to create cloud storage bucket
+
+export LOCATION=US
+
+create bucket named after project id
+gsutil mb -l $LOCATION gs://$DEVSHELL_PROJECT_ID
+
+retreive a banner from a public cloud storage location
+gsutil cp gs://cloud-training/gcpfci/my-excellent-blog.png my-excellent-blog.png
+
+copy banner to cloud bucket
+gsutil cp my-excellent-blog.png gs://$DEVSHELL_PROJECT_ID/my-excellent-blog.png
+
+modify permissions so this image is viewable by everyone
+gsutil acl ch -u allUsers:R gs://$DEVSHELL_PROJECT_ID/my-excellent-blog.png
+
+while ssh'd into VM
+
+CD to root of webserver
+cd /var/www/html
+
+using nano to edit index.php 
+sudo nano index.php
+
+unmodified PHP file we inserted
+<html>
+<head><title>Welcome to my excellent blog</title></head>
+<body>
+<h1>Welcome to my excellent blog</h1>
+<?php
+ $dbserver = "CLOUDSQLIP";
+$dbuser = "blogdbuser";
+$dbpassword = "DBPASSWORD";
+// In a production blog, we would not store the MySQL
+// password in the document root. Instead, we would store it in a
+// configuration file elsewhere on the web server VM instance.
+$conn = new mysqli($dbserver, $dbuser, $dbpassword);
+if (mysqli_connect_error()) {
+        echo ("Database connection failed: " . mysqli_connect_error());
+} else {
+        echo ("Database connection succeeded.");
+}
+?>
+</body></html>
+
+restarting the apache web server
+sudo service apache2 restart
+
+
+

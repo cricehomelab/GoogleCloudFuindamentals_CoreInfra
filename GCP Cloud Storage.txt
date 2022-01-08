@@ -1,0 +1,199 @@
+GCP Cloud Storage
+
+Introduction to different data storage techniques. 
+Cloud storage
+Cloud SQL
+Cloud Spanner
+Cloud data store
+Google Big table
+
+
+
+Google Cloud Storage - Binary large object storage.
+	- High performance
+	- Internet Scalable
+	- Simple admin overhead
+		- Does not require capacity management. 
+
+	- Not managed in a collection of folder and folder hierarchy. (File storage)
+	- Not managed by OS storage in chunks of dis (Block storage)
+	- IT IS giving google a bunch of bytes and Google letting you access it with a unique key (often in the form of a URL).
+		- fully managed scalable service
+		- do not need to provision space in advance.
+	
+	- use cases
+		- website data
+		- archival and disaster recovery
+		- data objects for direct download for users. 
+	
+	- not a file system
+		- each object has a url
+		- each feels like a file
+		- not used for a root file system in a linux box
+		- comprised of buckets to hold storage objects
+		- immutable objects
+		- data encrypted on server side
+		- data in transit encrypted via HTTPS
+		- Online and offline import services are available.
+		
+	- when you create a bucket 
+		- you give it a globally unique name.
+		- specify a geographic location for the data to be stored.
+			- pick a location to minimize latancy for users. 
+		- pick a storage class.
+
+Bucket attributes					Bucket comments
+Globally unique name				Files (in a flat namespace)
+Storage class
+location (region or multi region)
+IAM policies/Access Control lists)	Access Control Lists (fine grained permissions)
+Object versioning setting
+Object lifecycle mgt rules
+
+Coud Storage data classes:
+
+
+					high performance object storage		|			backups/archival storage
+														|
+					multi regional		regional		|	nearline				Coldline
+														|
+Intended for		most frequently		accessed w/in	|	accessed <				accessed less than
+data that is...		accessed			a region often	|	1x per month			1x per year
+														|
+Avalability SLA		99.95%				99.90%			|	99.00%					99.00%
+														|
+Access APIs								CONSISTANT APIS accross the board
+
+access time						       Millisecond access accross the board
+														|
+storage price		Highest				2nd highest		|	2nd lowst				lowest						Pricing for all classes per GB stored per month
+														|
+Retreival price		Lowest				2nd lowest		|	2nd highest				highest						Pricing for all classes per GB stored per month
+														|
+use cases			Content storeage	in-region		|	long-tail				archival/
+					and delivery		analytics		|	content backups			disaster recovery
+										transcoding		|
+
+Methods of bringing data to cloud storage
+Online Transfer				Self-managed copies using CLI (GSUTIL) or drag and drop 
+
+Storage Transfer service	Scheduled managed batch transfers
+
+Transfer appliance (beta)	Rackable appliances securely ship data (leased)
+
+
+Cloud storage works with other google cloud tools and can interact with putting data in or taking data out.
+ - BigQuery
+ - Compute Engine
+ - App Engine
+ - Cloud SQL
+
+
+Cloud Big Table 
+
+Fully manged NoSQL, wide column database service for terabyte applications
+
+sparsely populated rows, able to store petabytes of data
+google manages this, low maintenance for users
+
+good for operational/analytical DB
+
+BigTable uses same API as Hbase offering native compatibility with bigdata Hadoop ecosystems.
+
+Advantages of BigTable
+	- Managed scalable storage
+	- managed upgrades
+	- transparent restarts
+	- Data encryption in flight and at rest
+	- IAM can control who has access
+	- BigTable drives major applications such as search, maps, Google Analytics, and Gmail
+
+Bigtable access patterns
+	- Application AP - data can be read and written to Cloud Bitable througha  data service like Managed VMs, the HBase
+	REST server, or a Java server using the HBase client. Typicallly this will be to server data to applications, dashbards,
+	and other services
+	- Streaming - Data can be streamed (AKA writen event by event) through popuular stream processing frameworks 
+		- Cloud Data flow Streaming
+		- Spark Streaming
+		- Storm 
+	- Batch processing - Data can be read from and written to Cloud Bigtable through batch processes like
+		- Hadoop MapReduce
+		- Dataflow
+		- Spark 
+	Often, summarized or newly calculated data is written back to Cloud Bigtable or to a downstream database. 
+	
+
+Google Cloud SQL and Google Cloud Spanner
+
+Cloud SQL is a managed RDBMS (Relational Database Management System)
+	- Offers MySQL and PostgreSQLBeta databases as a service.
+		- Automation replication
+		- Managed backups
+		- Vertical scaling (read and write)
+		- Horizontal scaling (read)
+		- Google security
+
+CloudSQL can be used with AppEngine using standard frivers.
+	- You can configure a CloudSQL instance to follow an AppEngine Application.
+Compute Engine Instances can be authorized to access CloudSQL instances using an external IP address
+	- Cloud SQL Instances can be configured with a preferred zone.
+Cloud SQL can be used with external applications and clients.
+	- Standard tools can be used to administer databases. (SQL workbench, TOAD, etc) 
+	- External Read replicas can be configured. 
+
+Cloud Spanner is a Horizontally scalable RDBMS
+	- Strong global consistancy
+	- Managed instanaces with high availablity.
+	- SQL Queries
+		- ANSI 2011 with extensions
+	- Automatic Replication
+	
+Cloud Datastore is horiziontally scaleable NoSQL DB
+	- Designed for application backends. 
+		- IE holding structured data from appengine apps. 
+	- supports transactions
+	- Includes a free daily quota
+		- storage
+		- writes
+		- deletes
+	- Auto scaling to handle load
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
