@@ -1,0 +1,138 @@
+Big Data and Machine Learning
+
+
+
+GCP Big Data Platform
+Google Cloud big data services are managed and scalable. (integrated, serverless platform)
+	- Cloud Dataproc - managed Apache Hadoop MapReduce, Spark, Pig, and Hive service.	
+		- Create clusters in 90s or less on average.
+		- scale clusters up and down weven while jobs are running.
+		- montitoring cluster can be set up in Stackdriver. 
+		- billed on 1s intervals.
+		- faster/cheaper to set up then the on-prem investments
+		- able to use pre-emptible instances.
+			- jobs must be able to be terminated and restarted in process. 
+		- once data is processed you can use Spark Machine Learning Libraries (MLlib) to running
+		classification algorithms. 
+	- Cloud Dataflow - Stream and batch processing unified and simplified pipelines
+		- good for realtime data or inpredictable data size or rate.
+		- Processes data using compute engine instances.
+			- clusters are sized for you.
+			- automated scaling, no instance provisioning required. 
+		- Managed data pipelines
+			- write code once get batch streaming
+				- Transform-based programming model
+		- process overview
+			- data read from a source (like BigQuery)
+			- transforms data - data manipulation and processing.
+			- sink - writes data to a source like Cloud Storage.
+		- elastic pipelines.
+		- General purpose ETL tool (Extract/transform/load) pipelines to filter, enrich, and shape
+		data
+		- Data Analysis: batch computation or continuous consumtion using streaming. 
+	- BigQuery - analytics database stream data a 100,000 rows per second
+		- BigQuery is a fully managed data warehouse
+			- provides near real-time interaction analysis of massive datasets (hundreds of TB)
+			using SQL syntax (SQL 2011)
+			- no cluster maintenance required.
+			- can load from Cloud Storage or Cloud Data Store or stream data into the DB
+			- free monthly quota avaialable
+			- Compute and storage are separated with terabit network in between
+			- You only pay for storage and processing
+			- Automatic discount for long term data storage	
+				- Storage price goes down after 90 days of storage. 
+	- Cloud Pub/Sub - scalable flexible enterprise messaging.
+		- Supports many-to-many asynchronous messaging.
+		- Application Components make push/pull subscriptions to topics.
+		- includes support for offline customers. 
+		- applications can publish messages and one or more subscribers can receive them. 
+		- designed to deliver at least once delivery (some messages MIGHT be delivered more
+		than once)
+		- why use?
+			- Building block for data ingestion in dataflow IOT and marketing analytics
+			- Foundation piece for Dataflow streaming
+	- Cloud Datalab - Interactive data exploration. 
+		- Interactive tool for large scale data exploration, transformation, analysis and
+		visualization
+		- Integrated Open source
+			-Built on Jupyter
+		- only  paid for resources used
+		- integrated with other GCP tools
+			- analyze data in BigQuery, Compute Engine and Cloud storage using:
+				- Python
+				- SQL
+				- Javascript
+			- able to deploy models to BigQuery
+
+
+Google Cloud Machine Learning Platform
+	- leverages open source tool TensorFlow to build and run neural network models
+		- wide platform support 
+			- CPU or GPU
+			- mobile, server or cloud
+		- Fully managed machine learning service
+			- Familiar notebook based developer experiance
+			- Optimized for google infrastructure
+				- Integrations with BigQuery and Cloud storage
+		- Pre-trained Machine learning models built by Google.
+			- Speech: Stream results in real time 80 languages are able to be detected
+			- Vision: Identify objects landmarks, text and content
+			- Translate: language translation including detection
+			- Natural Lantguage: Structure meaning of text.
+	- why Use?
+		- for structured data
+			- Classification and regression
+			- recommendation
+			- anomaly detection
+		- for unstructured data
+			- image and video
+			- text analytics
+	- Cloud Vision API
+		- Analyze images iwth a simple REST API
+			- Logo detection Label detection etc. 
+	- Cloud Natural Language API
+		- Can return text in real time
+		- Highly accurate event in noisy environments
+		- access from any device
+		- uses ML learning models to reveal structure and meaning of text
+		- Extract information about items mentioned in text docuyments news articles
+		and blog posts
+	- Cloud Translation API
+		- Translate arbitrary strings between thousands of language pairs
+		- Programatically detect a document's language
+		- Support for dozens of languages.
+	- Cloud Video intelligence API (Beta)
+		- Annotate the contents of videos
+		- Detect scene changes
+		- Support for a variety of video formats
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

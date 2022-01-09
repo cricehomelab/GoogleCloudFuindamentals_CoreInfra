@@ -1,0 +1,65 @@
+Dev in the cloud
+
+- Development in the cloud
+- Deployment: Infrastructure as code
+- Monitoring: Proactive Instrumentation
+
+
+Development in the cloud
+Cloud Source repositories
+- Fully featuered git repositories can be hosted in GCP
+	- Cloud Source Repositories can host a git repository specific to a project
+		- GCP IAM can control access to who has the source code.
+
+- Cloud Functions (Beta)
+	- Create single-purposed functions that respond to events without a server or runtime
+	- Create triggers in code that alert GCP you are interested in a particular event. 
+		- Attached functions written in javascript executed in a managed Node.js environment on GCP
+	
+	
+Deployment: Infrastructure as code.
+- Deployment Manger
+	- infrastructure management service
+	- automates GCP resources
+	- Create a yaml or python configuration file
+		- file describes what your environment should look like and what resources would need to be 
+		created.
+
+
+Monitoring: Proactive Instrumentation
+- Stackdriver - active monitoring tool in GCP.
+	- Monitoring
+		- Platform, system, and application metrics
+		- uptime and health checks
+		- dashboard and alerts
+	- logging
+		- platform, system and application logs
+		- log search, view, filter, and export
+		- log based metrics
+	- debug
+		- debug applications
+	- error reporting
+		- error notifications
+		- error dashboard
+	- trace
+		- Latency reporting and sampling
+		- Per-URL latency and statistics
+	- Profiler (beta)
+		- Continuous profiling of CPU and memory consumption
+		
+	
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+

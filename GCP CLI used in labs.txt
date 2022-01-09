@@ -93,7 +93,15 @@ gcloud config list project
 create an appengine project
 gcloud app create --project=$DEVSHELL_PROJECT_ID
 
+Installing monitoring and loggin agent on a VM instance
 
+monitoring agent
+curl -sSO https://dl.google.com/cloudagents/install-monitoring-agent.sh
+sudo bash install-monitoring-agent.sh
+
+logging agent
+curl -sSO https://dl.google.com/cloudagents/install-logging-agent.sh
+sudo bash install-logging-agent.sh
 
 
 
