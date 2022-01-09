@@ -82,6 +82,19 @@ scale number of pods to 3
 kubectl scale deployment nginx --replicas 3
 
 
+AppEngine commands
+
+See authorized users on a project
+gcloud auth list
+
+list the project id
+gcloud config list project
+
+create an appengine project
+gcloud app create --project=$DEVSHELL_PROJECT_ID
+
+
+
 
 
 

@@ -1,0 +1,164 @@
+GCP AppEngine
+
+AppEngine is for foucisng on code rather than the infrastructure needed to run it.
+AppEngine is a PaaS 
+
+AppEngine manages the hardware and networking needed to run the application. 
+The idea here is to allow the user to focus on innovation not maintenance of systems.
+
+AppEngine scales the application automatically in response to the traffic it receives.
+
+AppEngine is especially suited for webapplications and mobile backend.
+
+2 possible environments
+	- Standard
+	- Flexible
+
+Standard Environment:
+	
+Standard  the simpler environment to use
+	- Easily deploy applications
+	- Autoscale workloads
+	- free daily quota
+	- usage based pricing
+
+low utilization applications may be able to run for free.
+
+Google provides SDKs for development testing and deployment.
+	- simple commands for deployment.
+	
+The executable binary for the appengine is called the Runtime
+	- requirements - support for Java, Python, PHP and Go
+	- includes appengine libraries for related apis. 
+	- other languages will not work in standard environment.
+	- enforces restrictions on the code by making it run in a "sandbox"
+		-no writing to local files - has to write to a database file instead for persistant data.
+		-all requests timeout at 60s 
+		-limits on 3rd party software - arbitrary 3rd party software cannot be installed. 
+
+Standard environment workflow
+1. Develop application run it locally with the appengine SDKs
+2. use the SDK to deploy application
+3. Upon deployment the appengine automatically deploys a project with the necesary components
+	- appengine scales as needed
+	- appengine can access a variety services using dedicated apis
+		-Memcache
+		-task queues
+		-Scheduled tasks
+		-search
+		-logs
+	
+Flexible environment:
+
+- Build and deploy containerized apps
+- No sandbox constraints
+- can access appengine resources
+
+
+
+								Standard Environment		Flexible Environment
+
+instance startup				miliseconds					minutes
+
+SSH access						no							yes(not by default)
+
+Write to Local disk				no							yes(write is ephemeral)
+
+Support for 3rd party binaries	no							yes
+
+Network Access					via AppEngine services		yes
+
+Pricing model					free daily use then			pay for resource allocation
+								pay per instance class		per hour. no auto shutdown.
+								w/ auto shutdown
+
+Kubernetes engine versus app engine
+Language Support:
+-Kubernetes Engine and AppEngine(Flexible) can write any language. 
+-AppEngine(Standard) can only write Java, Go, Python, and PHP
+
+Service Model:
+-Kubernetes Engine is a Hybrid model
+-Both options for AppEngine are PaaS
+
+Primary use case: 
+- Kubernetes Engine: Container based Workloads.
+- AppEngine Flexible: Web and mobile applications, container based workloads.
+- AppEngine Standard: Web and Mobile applications.
+
+
+In general Kubernetes Engine is the most Managed infrastructure option of the 3
+	- most flexible
+	- most amount of user maintenance
+	
+App Engine Flexible is sort of a mix of the two
+
+App Engine Standard is a dynamic infrastructure 
+	- least flexible
+	- least amount of user maintenance
+	
+
+Google cloud endpoints and Apigee Edge
+
+An API is a simplified version of a complex changeable system. 
+	- An API allows someone to use a complicated system with higher level knowledge rather
+	than fine grained low level understanding of an application.
+	- An API is designed to remove unnecesary details of an application to make accessibility 
+	more achievable. 
+	- this allows the software to change and as long as the API does not users are still able 
+	to get the information they need. 
+	
+Changes to an API are versioned
+	- programs that use an API can specify the version of the API they want to use in their 
+	calls.
+
+API Management tools that Google Cloud Supports
+Google Cloud Endpoints
+Apigee edge
+
+Cloud Endpoints
+	- able to restrict access of API to trusted sources.
+	- able to monitor and log its use
+	- single mehtod of determining who is making an API call.
+	
+	Cloud Endpoints allow for one to control access and validate calls with JSON Webtokens and 
+	google API keys
+		- identify web, mobile users with Auth0 and Firebase Authentication
+	Generate Client Libraries.
+
+	Supported Platforms
+	
+	Runtime Environment					Clients
+	
+	App Engine Flexible Environment		Android
+	Kubernetes Engine					iOS
+	Compute Engine						Javascript
+
+
+Apigee Edge	- focus on business problems.
+Generally you are using this to provide a service to other businesses.
+ 
+- A platform for making APIs available to your customers and partners
+- Contains Analytics, monetization, and developer portal
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
