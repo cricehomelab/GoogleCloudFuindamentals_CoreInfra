@@ -112,7 +112,7 @@ Bigtable access patterns
 	- Application AP - data can be read and written to Cloud Bitable througha  data service like Managed VMs, the HBase
 	REST server, or a Java server using the HBase client. Typicallly this will be to server data to applications, dashbards,
 	and other services
-	- Streaming - Data can be streamed (AKA writen event by event) through popuular stream processing frameworks 
+	- Streaming - Data can be streamed (AKA writen event by event) through popular stream processing frameworks 
 		- Cloud Data flow Streaming
 		- Spark Streaming
 		- Storm 
