@@ -8,4 +8,97 @@ Google Shell Cloud SDK - CLI interface
 REST-based API - for custom applications
 Cloud Mobile App - for IOS and Android
 
+This is building on the fundamentals from the previous course. In this module we predominately learned from 2 labs. 
 
+LAB 1: Working with GCP Cloud Console and Cloud Shell
+1. Using the Google Cloud Console to create a bucket
+	A. Logged into the GCP console. 
+	B. In the Console used the Navigation Menu to go to Cloud Storage > Browser.
+	C. Selected Create Bucket.
+	D. Named the bucket, I used the Project ID for the project to ensure a globally unique name. 
+	E. Selected Create. 
+
+2. Access Cloud Shell
+	A. Selected Activate Cloud Shell.
+
+3. Use Cloud Shell to create a Storage bucket. 
+	A. Opened Cloud Shell
+	B. In the shell ran the command "gsutil mb gs://<bucket name> 
+		a. for the <bucket name> I named the bucket after the project id and added -2 to the end because it needs to be globally unique. 
+	C. Verified the bucket existed from the Console by checking Navigation menu > Cloud Storage > Browser. 
+
+4. Explore more Cloud Shell features.
+	A. In Cloud Shell I selected the More button (3 vertical dots)
+	B. Selected Upload file.
+	C. Uploaded a file from my local machine of my choosing. 
+	D. In Cloud Shell I could verify the upload completed from the ls command. 
+	E. I copied the file that was uploaded to the storage bucket I had previously created. 
+		a. gsutil cp <my file name> gs://<bucket name>
+	F. Checked the bucket I had uploaded the file to from the console to verify the file was present. 
+
+5. Create a persistant state in the Cloud Shell. 
+	A. listed the available regions from the console by command.
+		a. gcloud compute regions list
+	B. Selected a region from the list to be my region.
+	C. Created an environment variable. 
+		a. ran the command INFRACLASS_REGION=<region>
+	D. Verified the variable was present.
+		a. echo $INFRACLASS_REGION
+	E. Appended the environment variable to a file. 
+		a. mkdir infraclass (create a directory)
+		b. touch infraclass/config (create a file)
+		c. echo INFRACLASS_REGION=$INFRACLASS_REGION >> ~/infraclass/config (append environment variable to the config file).
+	F. Create a second environment variable, one for the project id, and append it to the config file.
+		a. INFRACLASS_PROJECT_ID=<project id>
+		b. append the project id to the config file.
+			i. echo INFRACLASS_PROJECT_ID=$INFRACLASS_PROJECT_ID >> ~/infraclass/config
+		c. was able to see both variables in the file by checking the file
+			i. cat ~/infraclass/config
+		d. Upon closing and re-opening the shell i was able to verify the environment variables no longer existed because they are not persistant yet. 
+
+6. Modifying the bash profile to create persistance.
+	A. Edited the sell profile file with the nano editor. 
+		a. Nano .profile
+		b. added a line to the bottom of the file
+			i. source infraclass/config
+		c. Ctl + O, and confirmed the file path to save
+		d. Ctl + x, to close nano. 
+	B. Close and re-open shell
+	C. Able to see that the environemnt variables have now saved when checking environment variables.
+		a. echo $INFRACLASS_PROJECT_ID
+		b. echo $INFRACLASS_REGION
+		
+LAB 2: Infrastructure Preview
+	A. Use Marketplace to build a Deployment. 
+		a. Went to Marketplace from the Console.
+		b. Searched for Jenkins Certified by Bitnami
+		c. Selected the product, and selected Launch. 
+		d. Pressed Deploy to deploy the instance. 
+	B. Verified the deployment
+		a. Copied the admin user and password down. 
+		b. From the console I visited the site and was able to login with the credentials. 
+		c. Verified I was able access the Manage Jenkins tab from the left side of the window. 
+	C. Administer the service. 
+		a. Went to Deployment Manager. 
+		b. Clicked the jenkins-1 instance.
+		c. SSH'd to the server.
+		d. Stopped the jenkins service
+			i. sudo /opt/bitnami/ctlscript.sh stop
+			ii. Verified I could no longer access the site. 
+		e. restarted the service. 
+			i. sudo /opt/bitnami/ctlscript.sh restart
+			ii. verified I was able to access the site again (took a minute or two for the service to start. 
+		f. ran exit command to leave the SSH session. 
+
+
+
+Projects - main organizer of infrastucture resources and these resources are related to billing accounts. 
+	
+
+	
+	
+	
+	
+	
+	
+	

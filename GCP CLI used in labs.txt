@@ -131,6 +131,10 @@ curl -sSO https://dl.google.com/cloudagents/install-logging-agent.sh
 sudo bash install-logging-agent.sh
 
 
-
+Jenkins Bitnami instance commands
+stop the Jenkins service
+sudo /opt/bitnami/ctlscript.sh stop
+restart the Jenkins serrvice
+sudo /opt/bitnami/ctlscript.sh restart
 
 
