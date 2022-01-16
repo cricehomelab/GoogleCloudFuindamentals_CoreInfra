@@ -1,3 +1,20 @@
+
+gcloud commands:
+
+List available regions in gcloud shell command: 
+gcloud compute regions list
+
+See authorized users on a project:
+gcloud auth list
+
+list the project id:
+gcloud config list project
+
+GCP CLI to create a cluster named webfrontend with 2 nodes in the preferred zone. 
+NOTE: this command would require an environment variable called $MY_ZONE
+gcloud container clusters create webfrontend --zone $MY_ZONE --num-nodes 2
+
+
 Blog lab
 
 google cloud command line to create VM for the lab with startup script for installing apache webserver. 
@@ -5,17 +22,27 @@ google cloud command line to create VM for the lab with startup script for insta
 gcloud compute instances create bloghost --project=qwiklabs-gcp-01-d4c808c804ee --zone=us-central1-a --machine-type=e2-medium --network-interface=network-tier=PREMIUM,subnet=default --metadata=startup-script=apt-get\ update$'\n'apt-get\ install\ apache2\ php\ php-mysql\ -y$'\n'service\ apache2\ restart --maintenance-policy=MIGRATE --service-account=398584050220-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --tags=http-server --create-disk=auto-delete=yes,boot=yes,device-name=bloghost,image=projects/debian-cloud/global/images/debian-9-stretch-v20211209,mode=rw,size=10,type=projects/qwiklabs-gcp-01-d4c808c804ee/zones/us-central1-a/diskTypes/pd-balanced --reservation-affinity=any
 
 
+
 GCP command lines used to create cloud storage bucket
 
 export LOCATION=US
 
-create bucket named after project id
-gsutil mb -l $LOCATION gs://$DEVSHELL_PROJECT_ID
+create bucket 
+mb command - short for "make bucket"
+creating a bucket must be globally unique. 
+gsutil mb -l $LOCATION gs://<BucketNameToCreate>
+
+upload a file to GCP and put it into a storage bucket
+upload the file from the three vertical dots in the Cloudshell instance
+in the console type
+gsutil cp [MY_FILE] gs://[BUCKET_NAME]
 
 retreive a banner from a public cloud storage location
+we are using the cp (copy) command to copy the png store at gs://cloud-training/gcpfci/my-excellent-blog.png to the local cloudshell. 
 gsutil cp gs://cloud-training/gcpfci/my-excellent-blog.png my-excellent-blog.png
 
 copy banner to cloud bucket
+this is copying png file that was downloaded locally to a bucket that is named after $DEVSHELL_PROJECT_ID environment variable. 
 gsutil cp my-excellent-blog.png gs://$DEVSHELL_PROJECT_ID/my-excellent-blog.png
 
 modify permissions so this image is viewable by everyone

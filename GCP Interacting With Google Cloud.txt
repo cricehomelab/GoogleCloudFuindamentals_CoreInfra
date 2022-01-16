@@ -1,0 +1,11 @@
+Module: Interacting with Google Cloud
+
+Using Google Cloud:
+
+There  are 4 ways to interact with GCP
+Google Cloud Platform Console - Web User Interface
+Google Shell Cloud SDK - CLI interface
+REST-based API - for custom applications
+Cloud Mobile App - for IOS and Android
+
+
