@@ -155,6 +155,5 @@ Select Other protocols and specify icmp protocol.
 Below is the equivelent command line:
 gcloud compute --project=qwiklabs-gcp-02-23a9ebc9fce6 firewall-rules create Managementnet-allow-icmp-ssh-rdp --direction=INGRESS --priority=1000 --network=mmanagementsubnet-us --action=ALLOW --rules=tcp:22,tcp:3389,icmp --source-ranges=0.0.0.0/0
 
-Creating a VM on a specified network and subnet
 
 
