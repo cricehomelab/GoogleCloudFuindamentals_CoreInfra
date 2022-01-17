@@ -64,9 +64,108 @@ Projects, networks and subnetworks
 			- Avoid large subnets
 				- more likely to cause CIDR range collisions. 
 				- Do not scale a subnet beyond what is necisary. 
-			
-				
-		
+	Expand a custom subnet
+		this can be expanded from the VPC menu and editing the details of the vpc under the "IP address range" field.
+	IP Addresses
+		- Internal IP
+			- allocated from subnet range to VMs by DHCP
+			- Lease renewed every 24 hours
+			- VM name + IP is registered with network-scoped DNS
+		- External IP (Optional)
+			- You only have to assign if you need the machine to be internet facing. 
+			- there are 3 different flavors of external IP
+				- Ephemeral - assigned from a pool of addresses (cheapest)
+				- Reserved - Static (more expensive)
+				- Bring your own (BYOIP) 
+					- to be eligible you need to bring a /24 block or larger. 
+			- The VM does not know its external IP it is mapped to the internal IP. 
+	DNS Resolution for Internal IP Addresses.
+		- Each instance has a hostname that can be resolved for an internal IP address.
+			- The hostname is the same as the instance name.
+			- The FQDN (Fully Qualified Domain Name) is [hostname].[zone].c.[project-id].internal
+		- Name resolution is handled by internal DNS Resolver. 
+			- Provided as part of compute engine (169.254.169.254)
+			- Configured for use on instance via DHCP
+			- Provides answer for internal and external IP addresses.
+	DNS Resolution for External IP Addresses.
+		- Instances with External IP addresses can allow connections from hosts outside of the project.
+			- users connect directly using external IP addresses.
+			- admins can also publish DNS records pointing to the instance.
+				- Public DNS records are not published automatically. 
+		- DNS records for external addresses can be published using exisiting DNS servers (outside of GCP).
+		- DNS zones can be hosted using Cloud DNS. 	
+	Hosting DNS Zones using Cloud DNS
+		- Googles DNS service
+		- Translates domain names into IP addresses
+		- low latency
+		- high availability (100% uptime SLA)
+		- Create and update millions of DNS records.
+		- Able to be interacted with from UI command line or API
+	Assign a range of ip addresses as aliases to a VM's network interface using alias IP ranges.
+		- useful if you have multiple services running on a single VM and you want to assign a different IP address
+		each service. 
+	Routes and Firewall rules
+		- Every network has:
+			- Routes that let instances in a network send traffic directly to each other
+			- A default route that directs packets to desinations that are outside the network. 
+				- Custom routes can also be defined. 
+		- Firewall rules must also allow the packet. 
+		- Routes map traffic to desitination networks.
+			- Apply to a traffic egressing a VM.
+			- Forward traffic to most specific route.
+			- Are created when a subnet is created.
+			- Enable VMs on the same network to communicate.
+			- Destination is ina CIDR notation.
+			- Traffic is delivered only if it also matches a firewall rule. 
+		- Firewall rules protect you VM instances from unapproved connections.
+			- VPC network functions as a distributed firewall. 
+			- Firewall rules are applied to the network as a whole.
+			- Connections are allowed or denied at the instance level.
+			- Firewall rules are stateful.
+				- if traffic is allowed between a source and a target all subsequent traffic in either direction will be allowed. 
+				- IE bidirectional traffic is allowed once a connection is established. 
+			- Implied deny on all ingress and allow all egress. 
+		- Firewall rule is composed of the following components.
+			- direction
+				- Inbound connections are matched against ingress rules only.
+				- Outbound connections are matched agains egress rules only.
+			- Source or destination.
+				- For the ingress direction, sources can be specified as part of the rule with IP addresses, sources tags or a source service account.
+				- For the egress direction, destinations can be specified as part of the rule with one or more ranges of ip addresses.
+			- protocol and port - Any Rule can be restricted to apply to only specific protocols or specific combinations of protocols and ports only.
+			- action - to allow or deny packets that match the dircection, protocol, port and source or destination of the rule. 
+			- priority - Governs the order in which rules are evaluated.
+			- Rule assignment - All rules are assigned to all instances but you can assign certain rules to certain instances only. 
+		- Egress rules - control outgoing connections originating inside of your GCP network
+			- Conditions:
+				- Destination CIDR ranges
+				- protocols
+				- ports
+			- Actions:
+				- Allow: Permit the matching egress connection
+				- Deny: block the matching egress connection
+		- Ingress rules - Protect against incoming connections to the instance from any source. 
+			- Conditions:
+				- Source CIDR ranges
+				- Protocols
+				- ports
+			- Action
+				- Allow: permitt he matching ingress connection
+				- Deny: Block the matching ingress connection
+	Pricing
+		- Ingress - no charge
+		- Egress to the same zone (internal IP address) 										- no charge
+		- Egress to Google products (YouTube, Maps, Drive) 										- No charge
+		- Egress traffic to a different GCP service (within the same region, some exceptions 	- no charge
+		- Egress between zones in the same region (per GB) 										- $0.01
+		- Egress to the same zone (external IP address, per GB) 								- $0.01
+		- Egress between regions within the US and Canada (per GB)								- $0.01
+		- Egress between Regions not including traffic between US regions 						- varies by region
+		- Static and ephemeral IP addresses
+			- Static Ip addresses(Assigned but not used)										- $0.010 /hour
+			- Static and ephemeral in use on standard vm instances								- $0.004 /hour
+			- Static and ephemeral IP addresses in use on pre-emptible VM instances				- $0.002 /hour
+			- Static and ephemeral IP addresses attached to forwarding rules						- no charge
 		
 		
 		
