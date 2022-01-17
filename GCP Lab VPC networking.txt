@@ -1,0 +1,197 @@
+LAB: VPC Networking
+
+TASK 1: Explore the Default Network.
+1. In Cloud Console in the navigation menu go to VPC Network > VPC Networks
+	A. May want to create a pin as we will use this a lot.
+	B. Examine the default network and see all the subnets 
+		a. There will be one for each Cloud Region 
+		b. There will be one for each RFC 1918 CIDR block for its internal IP address range and a gateway. 
+	C. View the routes by selecting Routes from the left pane. 
+		a. There will be a route for each subnet 
+		b. There will also be one for Default Internet Gateway (0.0.0.0/0)
+	D. View the firewall rules by selecting Firewall option on the left pane. There will be 4 rules.
+		a. default-allow-icmp
+		b. default-allow-rdp
+		c. default-allow-ssh
+		d. default-allow-internal
+	E. Delete firewall rules.
+		a. We should already be on Firewall, but if not we can select Firewall from the left pane. 
+		b. Select the network named "default"
+		c. Select Delete VPC Network.
+	F. Select Routes from the left pane. 
+		a. There will be no routes here since we deleted the firewall rules. 
+2. We should not be able to create VMs at this point since we have removed the network.
+	A. Go to the Navigation Menu
+		a. Click Compute Engine (save a pin)
+		b. Click Create Instance
+		c. use default values and select create.
+		d. Expected behavior is for this to fail.
+	B. If you select Management, security, disk, networking, sole tenancy.
+		a. You will notice in the networking section that no local network available shows up here. 
+
+TASK 2: Create an auto mode network.
+1. Create an auto mode network with firewall rules.
+	A. Go to VPC Network > VPC Networks
+		a. Click Create VPC Network
+		b. Name the network "mynetwork"
+		c. For Subnet creation mode click on Automatic.
+		d. For Firewall Rules, select all available rules.
+		e. Click Create
+	B. Record the IP address range for subnets in us-central1 and europe-west1
+		a. us-central1: 10.128.0.0/20
+		b. europe-west1: 10.132.0.0/20
+2. Create 2 VMs to test with
+	A. Create a VM instance in us-central1
+		a. Go to Compute Engine > VM Instances and select Create Instance
+		b. Specify the following values for it.
+			1. Name:		 mynet-us-vm
+			2. Region:		 us-central1
+			3. Zone:		 us-central1-c
+			4. Series:		 n1
+			5. Machine type: n1-standard-1 (1 vCPU, 3.75 GB memory)
+			6. boot disk :	 Debian GNU/Linux 10 (buster)
+		c. Get script to create this. 
+			
+			gcloud compute instances create mynet-us-vm --project=qwiklabs-gcp-04-53f86657b6e8 --zone=us-central1-c --machine-type=n1-standard-1 --network-interface=network-tier=PREMIUM,subnet=mynetwork --maintenance-policy=MIGRATE --service-account=381744625856-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --create-disk=auto-delete=yes,boot=yes,device-name=mynet-us-vm,image=projects/debian-cloud/global/images/debian-10-buster-v20211209,mode=rw,size=10,type=projects/qwiklabs-gcp-04-53f86657b6e8/zones/us-central1-c/diskTypes/pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
+		
+		d. select Create
+		e. Verify that the IP address is configured with the correct subnet for us-central1 (10.128.0.0/20)
+			1. IP address for VM:		10.128.0.2
+			   External ip address:		34.135.80.15
+	B. Create VM instance in europe-west1	
+		a. Specific values
+			1. Name:		 mynet-eu-vm
+			2. Region:		 europe-west1
+			3. Zone:		 europe-west1-c
+			4. Series:		 n1
+			5. Machine type: n1-standard-1 (1 vCPU, 3.75 GB memory)
+			6. boot disk :	 Debian GNU/Linux 10 (buster)
+		b. get script to create this.
+			
+			gcloud compute instances create mynet-eu-vm --project=qwiklabs-gcp-04-53f86657b6e8 --zone=europe-west1-c --machine-type=n1-standard-1 --network-interface=network-tier=PREMIUM,subnet=mynetwork --maintenance-policy=MIGRATE --service-account=381744625856-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --create-disk=auto-delete=yes,boot=yes,device-name=mynet-eu-vm,image=projects/debian-cloud/global/images/debian-10-buster-v20211209,mode=rw,size=10,type=projects/qwiklabs-gcp-04-53f86657b6e8/zones/us-central1-c/diskTypes/pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
+			
+		c. Veriy the IP address is configured with the correct subnet for europe-west1 (10.132.0.0/20)
+			1. IP address for VM:  		10.132.0.2
+			   External IP Address:		35.240.45.114
+	C. Verify connectivity between VM instances.
+		a. note the internal and external IP for the mynet-eu-vm machine.
+			1. Internal IP 10.132.0.2
+			2. External IP 35.240.45.114
+		b. SSH to the mynet-us-vm machine.
+		c. attempt to ping the mynet-eu-vm from the mynet-us-vm
+			1. ping -c 3 10.132.0.2
+			2. ping -c 3 35.240.45.114
+3. Convert the network to a custom mode network.
+	A. On the navigation menu go to VPC Network > VPC Networks
+		a. Click on mynetwork
+		b. Click Edit
+		c. Select Custom for the Subnet Creation Mode
+		d. Click Save
+		e. Verify the Mode of mynetwork shows as custom (may need to hit refresh several times)
+
+Task 3: Create Custom mode networks
+1. Create the managementnet network
+	A. VPC network > VPC networks
+	B. Create VPC Network
+	C. Create a VPC network with the following properties.
+		a. name: managementnet
+		b. for subnet creation mode click Custom
+			1. Name: 				managementsubnet-us
+			2. Region: 				us-central1
+			3. IP address range: 	10.130.0.0/20
+		c. Click Done.
+	D. Click Equivalent Command Line
+		
+		gcloud compute networks create managementnet --project=qwiklabs-gcp-04-53f86657b6e8 --subnet-mode=custom --mtu=1460 --bgp-routing-mode=regional
+		gcloud compute networks subnets create managementsubnet-us --project=qwiklabs-gcp-04-53f86657b6e8 --range=10.130.0.0/20 --network=managementnet --region=us-central1
+		
+	E. Click Create.
+2. Create the privatenet network (from Cloud Shell this time).
+	A. In the Cloud Console click Activate Cloud Shell.
+	B. Run the following command:
+		gcloud compute networks create privatenet --subnet-mode=custom
+	C. Create the privatesubnet-us by running the following command:
+		gcloud compute networks subnets create privatesubnet-us --network=privatenet --region=us-central1 --range=172.16.0.0/24
+	D. Create the privatesubnet-eu by running the following command:
+		gcloud compute networks subnets create privatesubnet-eu --network=privatenet --region=europe-west1 --range=172.20.0.0/20
+	E. Validate creation of network/subnets from the Cloud Shell.
+		a. Get a list of available VPC Networks
+			gcloud compute networks list
+		b. Get a list of available VPC Subnets
+			gcloud compute networks subnets list --sort-by=NETWORK
+	F. In the Navigation Menu going to VPC Network > VPC Networks should get you to the same place. 
+3. Create the firewall rules for the managementnet
+	A. Navigation Menu > VPC Networks > Firewall
+	B. Create Firewall rule
+	C. Specify the following:
+		a. Name: managementnet-allow-icmp-ssh-rdp
+		b. Network: managementnet
+		c. Targets: All instances in the network
+		d. Source filter: IP Ranges
+		e. Source IP Ranges: 0.0.0.0/0
+		f. Protocols and ports: Specified protocols and ports
+			1. Select tcp and specify ports 22 (ssh) and 3389 (rdp)
+			2. Select Other protocols and specify icmp.
+	D. Go to Equivalent Command Line.
+		
+		gcloud compute --project=qwiklabs-gcp-04-53f86657b6e8 firewall-rules create managementnet-allow-icmp-ssh-rdp --direction=INGRESS --priority=1000 --network=managementnet --action=ALLOW --rules=tcp:22,tcp:3389,icmp --source-ranges=0.0.0.0/24
+		
+	E. Click Close then press Create. 
+4. Create Firewall rules for privatenet	(this time from Cloud Shell)
+	A. Open Google Cloud Shell.
+	B. To create a privatenet-allow-icmp-ssh-rdp firewall rule run the following command:
+		gcloud compute firewall-rules create privatenet-allow-icmp-ssh-rdp --direction=INGRESS --priority=1000 --network=privatenet --action=ALLOW --rules=icmp,tcp:22,tcp:3389 --source-ranges=0.0.0.0/0
+	C. To list all the firewall rules (sorted by VPC network) run the following command.
+		gcloud compute firewall-rules list --sort-by=NETWORK
+5. Create 2 more VMs
+	A. specific details for the first VM
+		a. Name:		 managementnet-us-vm
+		b. Region:		 us-central1
+		c. Zone:		 us-central1-c
+		d. Series:		 n1
+		e. Machine type: n1-standard-1 (1 vCPU, 3.75 GB memory)
+		f. boot disk :	 Debian GNU/Linux 10 (buster)
+		g. Select management, security, disks, networking, sole tenancy.
+			1. Click Networking.
+			2. For Networking interfaces click the pencil icon to edit. 
+			3. Specify the follwoing for the network and subnet.
+				i. Network: 		managementnet
+				ii. Subnetwork: 	managementsubnet-us
+		h. Command line equiv:
+			
+			gcloud compute instances create managementnet-us-vm --project=qwiklabs-gcp-04-53f86657b6e8 --zone=us-central1-c --machine-type=n1-standard-1 --network-interface=network-tier=PREMIUM,subnet=managementsubnet-us --maintenance-policy=MIGRATE --service-account=381744625856-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --create-disk=auto-delete=yes,boot=yes,device-name=managementnet-us-vm,image=projects/debian-cloud/global/images/debian-10-buster-v20211209,mode=rw,size=10,type=projects/qwiklabs-gcp-04-53f86657b6e8/zones/us-central1-c/diskTypes/pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
+			
+	B. 	Create the second VM from the Google Cloud Shell.
+		a. Open Cloud Shell.
+		b. type the following command:
+			gcloud compute instances create privatenet-us-vm --zone=us-central1-c --machine-type=f1-micro --subnet=privatesubnet-us --image-family=debian-10 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=privatenet-us-vm
+	C. Verify the instance created from Shell by running the following command:
+		gcloud compute instances list --sort-by=ZONE
+		
+Task 4: Explore the connectivity accross the networks.
+1. Ping the external ip addresses:
+	A. mynet-eu-vm
+		a. internal ip: 10.132.0.2
+		b. external ip: 35.240.45.114
+	B. managementnet-us-vm
+		a. internal ip: 10.130.0.2
+		b. external ip: 34.123.103.146
+	C. privatenet-us-vm
+		a. internal ip: 172.16.0.2
+		b. external ip: 34.67.115.206
+2. ssh to mynet-us-vm
+	A. Ping mynet-eu-vm external and internal ip
+		ping -c 3 35.240.45.114		
+		ping -c 3 10.132.0.2		
+	B. ping managementnet-us-vm external ip
+		ping -c 3 34.123.103.146		
+		ping -c 3 10.130.0.2		
+	C. ping privatenet-us-vm external ip
+		ping -c 3 34.67.115.206 		
+		ping -c 3 172.16.0.2
+		
+
+		
+		
+		
+		
