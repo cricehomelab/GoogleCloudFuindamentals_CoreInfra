@@ -1,0 +1,72 @@
+Virtual Networks
+
+Virtual Private Cloud
+
+VPC Objects
+	- Projects - encompass every service including networks. 
+	- Networks 
+		- Default
+		- Auto mode
+		- Custom Mode
+	- Subnetworks - allow to divide or segregate network. 
+	- Regions
+	- Zones
+	- IP Addresses
+		- Internal
+		- External
+		- Range
+	- Virtual Machines 
+	- Routes
+	- Firewall Rules
+
+Projects, networks and subnetworks
+	- Projects
+		- Associates objects and services with billing
+		- Contains networks (up to 5 that can be shared/peered)
+	- Networks	
+		- No IP address range
+		- Is Global and spans all available regions
+		- Contains Subnetworks
+		- Is available in 3 flavors 
+			- default
+				- every project
+				- one subnet per region
+				- default firewall rules
+				- This is the original default setting for any project made. 
+					- technically this is an Auto mode network. 
+			- Auto
+				- Default Network - is technically an auto netork. 
+				- One subnet per region
+				- Regional IP allocation
+				- Fixed /20 subnetwork per region
+				- Expandable to up to /16
+			- custom
+				- No default subnets created
+				- Full control of IP ranges
+				- Regional IP ranges
+				- Expandable to IP Ranges you specify
+				- cannot be changed down to a auto mode network. 
+		- Networks help to isolate systems.
+			- If there are 2 VMs on the SAME network but the VMS are located in different regions.
+				- These VMs can still communicate between each other using internal IPs because they are on the same network. 
+			- If there are 2 VMs that are located in DIFFERENT networks but in the SAME region.
+				- they must communicate using external IPs because they are not on the same network.
+		- subnetworks work on a regional scale
+			- VMs can be on the same subnet but be located in different zones
+			- A single firewall rule can apply to both vms.
+		- Expand Subnets with recreating instances
+			- Cannot overlap with other subnets in any region. 
+			- IP range must be a unique valid CIDR (classless inter-domain routing) block
+				- CIDR - is a method for allocating IP Addresses and for IP Routing. 
+			- New subnet IP ranges have to fall within valid ranges
+			- Can expand but cannot shrink
+			- Auto mode can be expanded from /20 to /16
+			- Avoid large subnets
+				- more likely to cause CIDR range collisions. 
+				- Do not scale a subnet beyond what is necisary. 
+			
+				
+		
+		
+		
+		
