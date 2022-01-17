@@ -166,6 +166,6 @@ Projects, networks and subnetworks
 			- Static and ephemeral in use on standard vm instances								- $0.004 /hour
 			- Static and ephemeral IP addresses in use on pre-emptible VM instances				- $0.002 /hour
 			- Static and ephemeral IP addresses attached to forwarding rules						- no charge
-		
+		- GCP pricing calculator will be useful for estimating cost of services from GCP.
 		
 		
