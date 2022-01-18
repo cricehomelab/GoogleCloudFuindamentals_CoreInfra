@@ -1,0 +1,119 @@
+LAB: Implement Private Google Access and Cloud NAT
+
+Task 1: Create the VM Instance
+A. Navigation Menu > VPC Network > VPC Networks
+	1. Click Create VPC Network.
+	2. Details
+		a. Name: 				privatenet
+		b. Subnet Creation: 	Custom
+			i.   Name: 			privatenet-us
+			ii.  Region: 		us-central1
+			iii. IP Range: 		10.130.0.0/20
+		c. Click Done
+		d. Click Create
+B. In the left Pane click Firewall
+	1. Click Create Firewall Rule
+		Details:
+		a. Name:				privatenet-allow-ssh
+		b. Network: 			privatenet
+		c. Targets:				All instances in the network
+		d. Source Filter:		IP ranges
+		e. Source Ip Ranges:	35.235.240.0/20
+		f. Protocols and Ports:	Specified protocols and ports
+		g. for tcp specify port 22 and click checkbox. 
+	2. Click Create.
+C. Create the VM Instace with no public IP address.
+	1. Navigation menu > compute engine > vm Instances
+	2. details
+		a. name:			vm-internal
+		b. Region:			us-central1
+		c. Zone:			us-central1-c
+		d. Series:			N1
+		e. Machine Type:	n1-standard-1 (1vCPU, 3.75 GB memory)
+		f. Boot Disk: 		Debian GNU/Linux 10 (buster)
+	3. Click Management, security, disks, networking, sole tenancy.
+		a. Networking
+		b. For network interfaces specify the following:
+			i.   network:		privatenet
+			ii.  Subnetwork: 	privatenet-us
+			iii. External IP: 	None
+		c. Click Done
+		d. Click Create
+
+Task 2: Enable Private Google Access
+A. Create Cloud Storage Bucket
+	1. Navigation Menu > Storage > Browser
+	2. Create Bucket
+		a. Name must be globally unique
+		b. Location type = Multi Region.
+B. Copy an image file to your bucket
+	1. In cloud shell run the following command:
+		gsutil cp gs://cloud-training/gcpnet/private/access.svg gs://[***MY_BUCKET***]
+	2. In the cloud console verify the image uploaded. 
+C. Access the image from VM instances
+	1. In Cloud Shell the follwoing command
+		gsutil cp gs://[***MY_BUCKET***]/*.svg .
+	2. SSH to VM Internal with this command from the cloud Shell
+		gcloud compute ssh vm-internal --zone us-central1-c --tunnel-through-iap
+	3. Try to copy again with this command
+		gsutil cp gs://[***MY_BUCKET***]/*.svg .
+	4. This should fail as Private Google Access is disabled by default. 
+D. Enable Private Google Access
+	1. Navigation Menu > VPC Network > VPC Networks
+	2. Click on privatenet to open the network
+	3. Click on privatenet-us to opent the subnet
+	4. Click Edit
+	5. For Private Google Access select On
+	6. Save
+E. Try that download command again from the ssh
+	gsutil cp gs://[***MY_BUCKET***]/*.svg .
+
+TASK 3: Configur a Cloud NAT Gateway
+A. Try to update the VM instances
+	1. In cloud shell you can do
+		sudo apt-get update
+	2. If you connect to the VM this will not work.
+		a. Command 1
+			gcloud compute ssh vm-internal --zone us-central1-c --tunnel-through-iap
+		b. Command 2
+			sudo apt-get update
+B. Configure a Cloud NAT gateway
+	1. Navigation > Network Services > Cloud NAT
+	2. Click Get Started
+	3. Specify the following:
+		a. Gateway Name:		nat-config
+		b. VPC Network:			privatenet
+		c. Region: 				us-central1
+	4. For Cloud Router select Create new Router
+	5. For name type nat-router
+	6. Click Create
+	7. Click Create
+C. Try to update the VM instances
+	1. In cloud shell you can do
+		sudo apt-get update
+	2. If you connect to the VM this will work now.
+		a. Command 1
+			gcloud compute ssh vm-internal --zone us-central1-c --tunnel-through-iap
+		b. Command 2
+			sudo apt-get update	
+	
+Task 4: Configure and view logs with Cloud NAT Logging.
+A. Enable Logging
+	1. Navigation > Network Services > Cloud NAT
+	2. Click on nat-config then edit
+	3. Click Advanced Configurations
+	4. Under Stackdriver logging select Translation and errors, and click Save.
+B. NAT logging in Cloud Operations
+	1. Click on nat-config the click on logs tab and click the link to Stackdriver Logging. 
+	2. a new tab with Operations logging will show. 
+	3. This should be empty now. 
+C. Generating logs
+	1. open cloud shell and run the following commands
+		a. gcloud compute ssh vm-internal --zone us-central1-c --tunnel-through-iap
+		b. sudo apt-get update
+		c. exit
+D. Return to the NAT logging tabl and under the configure dropdown select Show newest logs first. 
+	1. There should be 2 new logs that were generated after connecting to the internal VM. 
+	
+		
+		

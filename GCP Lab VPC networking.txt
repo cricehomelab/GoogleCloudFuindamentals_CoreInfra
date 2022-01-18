@@ -190,7 +190,28 @@ Task 4: Explore the connectivity accross the networks.
 		ping -c 3 34.67.115.206 		
 		ping -c 3 172.16.0.2
 		
+GCP Common Network Designs
 
+Increased availability with multiple zones. 
+	- if you need additional availability, it is possible to use 2 VMs one VM in one zone and one VM in a different zone, but
+	have both VMs in the same subnetwork. 
+		- Example:
+			- VM 1 located in zone us-west-1a with IP 10.2.0.2
+			- VM 2 located in zone us-west-1b with IP 10.2.0.3
+			- Both VMs can be on the same subnet of 10.2.0.0/16 inside of a project
+Globalization with multiple regions
+	- Placing instances in different regions provides failure resistance because there are different instances in different geographical locations. 
+		example:
+			- VM1 in region us-east1 in zone us-east-1a on subnet 10.2.0.0/16 with an ip address of 10.2.0.4
+			- VM2 in region us-west1 in zone us-west-1b on subnet 192.168.0.0 with an ip address of 192.168.0.2
+			- Both of these machines can be connected with a tool like the HTTP Global load balancer to allow a user to connect to whatever region
+			is closer to the user.  
+Cloud NAT provides internet access to private instances.
+	- For security sake it is best practice to only assign a private IP address unless a public IP is absolutely needed. 
+	- Managed Network Addressed Translation service. This allows private IPs have controlled access for things like patching and updates. 
+Private Google Access should be enabled so Google APIs and services can be reached. 
+	- Enabled on a subnet by subnet basis.
+	
 		
 		
 		
