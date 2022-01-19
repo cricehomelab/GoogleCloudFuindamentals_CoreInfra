@@ -1,0 +1,75 @@
+GCP Compute Engine
+
+Virtual Machine instances for VMs are supplied by Compute Engine. 
+
+Some weird perks that can happen.
+1. Micro VM shares cpu with other vms
+2. Burst capability can run briefly above its rated CPU
+
+
+Compute Engine
+- Infrastructure as a Service (IaaS)
+- Predefined or custom Machine types.
+- vCPUs(cores) and Memory (RAM)
+- Storage
+	- Zonal or Regional Persistant Disk (HDD or SSD)
+	- Local SSD
+	- Cloud Storage
+- Networking
+- Linux or Windows
+
+Compute Engine Features
+- Machine Right sizing
+	- Recomendation engine for optimum machine settings
+	- Cloud Monitoring Statistics
+	- New Recommendation 24 hours after VM create, or resize
+- Instance Metadata
+- Startup Scripts
+- Availability Policies
+	- Live Migrate
+	- Auto Restart
+-Global load balancing
+	- Multiple regions for availability
+- OS Patch Management
+	- Create Patch approvals
+	- Set up Flexible scheduling
+	- Apply advanced patch configuration settings
+- Per second billing
+- Sustained use discounts
+- commited use discounts
+- Pre-emptible
+	- PRO up to an 80% discounts
+	- CON no SLA
+	
+Compute options
+- Several machine types
+	- Network throughput scales 2Gbps per vCPU (some small exceptions)
+	- Theoretical max of 32 Gbps with 16 vCPU or 100 Gbps with T4 or V100 GPUs
+- 1 vCPU = 1 hardware hyper-thread
+- available cpu platforms
+	- https://cloud.google.com/compute/docs/cpu-platforms
+
+Disk Options
+- Standard, SSD, or local SSD
+- Standard and SSD PDs scale in performance for each GB of space allocated
+- Able to resize disks or migrate instances with no downtime. 
+
+Networking
+- Robust Network Features
+	- Default Custom Networks
+	- Inbound/outbound firewall rules
+		- ip based
+		- instance/group tags
+	- Regional HTTPS load balancing
+	- Network Load balancing
+		- Does not require pre-warming
+	- Global and multi regional subnetworks.
+
+
+
+
+
+
+
+
+
