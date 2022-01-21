@@ -66,6 +66,101 @@ Networking
 	- Global and multi regional subnetworks.
 
 
+VM Access and Lifecycle
+
+For accessing a VM the creator has full root privilages on that instance.
+
+VM access Linux (SSH) 
+	- SSH from Cloud Console or Cloudshell via Cloud SDK
+	- SSH from computer othird party client and Generate Key pair
+	- Requires Firewall rule to allow TCP:22
+
+VM Access Windows (RDP)
+	- RDP Clients
+	- Powershell Terminal
+	- requires setting the windows password
+	- requires firewall rule to allow tcp:3389
+
+VM Lifecycle
+1. Provisioning
+	A. vCPUs + Memory
+	B. Root disk / persistant disk
+	C. Additonal Disks
+2. Staging
+	A. IP addresses (Internal/External)
+	B. System Image
+	C. Boot
+3. Running ---> Able to Reset the VM. 
+	A. Startup script
+	B. Access SSH/RDP
+	C. Modify Use
+		a. Set/get Metadata
+		b. Export System Image
+		c. Snapshot persistant disk
+		d. move VM to a different zone  ------> Live Migrate
+	E. Stopping 
+		a. Shutdown Scripts
+	F. Terminated
+		a. Delete
+		b. Avaialable policy (this loops back to Provisioning).
+			1. Able to restart the unit. 
+	
+Availability policy
+- Scheduling options
+- Automatic restart	
+	- Automatic restart due to crash/maintenance event
+		- Not pre-emption or a user initiated termination
+- On host Maintenance
+	- Determines whether host is live migrated or terminated due to a maintenance event, live migration is the default
+- Live Migration
+	- During maintenance event VM is migrated to a different hardware without interruption
+	- Metadata indicates occurance of live migration. 
+
+Patch Management
+- Able to manage patches through GCloud
+	- Keep Infrastructure up to date
+	- Reduce risk of security vulnerabilities
+- OS Patch Management
+	- Patch Compliance reporting
+	- Patch Deployment
+
+Patch Management functions
+- Create patch approvals
+- set up flexible scheduling
+- apply advanced patch config settings
+- Manage patch jobs or updates from a centralized location.
+
+Stopped or terminated VM
+- No charge for a stopped VM
+- you are charged for attached disks/reserved IP addresses. 
+- Actions that can be taken while stopped	
+	- Change Machine type
+	- Migrate the VM instance to another network
+	- Add or remove attached disks; change auto delete settings
+	- modify instance tags
+	- Modify custom VM or project wide metadata
+	- Remove or set a new static IP
+	- Modify VM availability policy
+	- CANNOT change the image of a stopped VM.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
