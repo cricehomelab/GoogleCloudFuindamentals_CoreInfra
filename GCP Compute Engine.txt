@@ -143,13 +143,175 @@ Stopped or terminated VM
 	- Modify VM availability policy
 	- CANNOT change the image of a stopped VM.
 
+Instructions for RDPing to windows VMs
+https://cloud.google.com/compute/docs/instances/windows/connecting-to-windows-instance
 
 
+Working with Virtual Machines:
+
+- standard choices
+	- Standard Memory - 3.75 GB of memory per vCPU
+	- High Memory - 6.5 GB of memory per vCPU
+	- Standard CPU - 0.9 GB of memory per vCPU
+	- memory optimized > 14 GB of memory per vCPU
+	- compute optimized highest performance per vCPU (3.8 Ghz sustained all core turbo)
+	- shared core - cost effective for small (f1-micro g1-small)
+
+- custom machine types when to use:
+	- requirements fit between predefined types
+	- need more memory or more CPU
+	- customizable
+		- Either 1 vCPU or an eeven number of vCPU
+		- 0.9 GB per vCPU or up to 6.5GB per vCPU
+		- Total memory mus bt a multiple of 256 MB
+
+- pricing 	
+	- Per second billing (min 1 minute)
+		-vCPU, GPUs, and GB of memory
+	- resource based pricing
+		- each vCPU and each GB of memory is billed separately.
+	- Discounts (can use one but not a combination of these)
+		- Sustained use
+		- committed use
+		- Pre-emptible VM instances
+	- Recomendation Engine
+		- notifies you of underutilized instances.
+	- free usage limits. 
+	
+- preemptible VMs 
+	- Lower price for interuptable service (up to 80%)
+	- VM might eb terminated at any time
+		- no charge if terminated within the first minute
+		- 24 hours max.
+		- 30-second terminate warning but not guaranteed.
+			- time for a shutdown script. 
+	- No live migrate or auto restart
+		- load balancing can be applied. 
+	- You can request CPU quota for a region be split between regular and pre-emption.
+		- Default: preemptiible VMs count against region CPU quota. 
+- Sole tenant nodes - can help physically isolate hosts from one another for compliance or other needs. 
+- shielded vm
+	- offer verifiable integrity
+	- Secure boot
+	- virtual trusted platform module (vTPM)
+	- Integrity monitoring
+	- requires shielded image. 
+	- part of shielded cloud initiative. 
+- confidential VMs allow data to be encrypted while it is in use. 
+	- encrypts data while it is being processed.
+	- Easy to use with no changes to code or performance compromise. 
+- N2D Compute Engine VM running on a second generation AMD Epyc processor (code name Rome). 
+- provides high memory capacity, high throughput, and supports parallel and compute heavy workloads.
 
 
+- Images
+	- when creating a VM you choose a boot disk.
+	- whats in an image
+		- boot loader
+		- operating system
+		- file system structure
+		- software
+		- customizations
+	- public based images.
+		- Google, thord party vendors, and community. Also can choose premium images (p).
+		- linux 
+			- Centos
+			- CoreOS
+			- Debian
+			- RHEL(p)
+			- SUSE(p)
+			- Ubuntu
+			- openSUSE
+			- FreeBSD
+		- Windows
+			- Windows server 2019(p), 2016(p), 2012-r2(p)
+			- SQL Server preinstalled on Windows(p)
+		- Custom images
+			- Create new images from VM: pre-configured or installed SW
+			- Import from an on-prem workstation or another cloud.
+			- Management features image sharing image family deprecation
+- Disk Options
+	- VM comes with a single root persistant disk.
+	- Image is loaded onto root disk during first boot.
+		- Bootable: you can attach to a VM and boot from it.
+		- Durable: can survive VM terminate.
+	- Some OS images are optimized for Compute Engine
+	- Can survive VM deletion if "Delete boot disk when instance is disabled" is disabled.
+	- Persistant disk - Network Storage appearing as a block device.
+		- attached to a VM through the network interface
+		- durable storage: can survive VM terminate
+		- Bootable: you can attach to a VM and boot from it.
+		- Snapshots: Incremental Backups.
+		- Performance: Scales with size
+		- HDD (magnetic) or SSD (faster solid state) options.
+		- Disk resizing: even while running and attached.
+		- Can be attached in read only mode through multiple VMs
+		- Zonal or regional	
+			- pd-standard
+			- pd-ssd
+			- pd-balanced
+			- pd-extreme (zonal only)
+		- Encryption keys
+			- Google-managed
+			- Customer-managed
+			- Customer-supplied
+	- Local SSD are physically attached to a VM
+		- ephemeral data, not persistant. 
+		- More IOPS, lower latency, and higher throughput
+		- 375-GB disk up to 8, with a total of 3 TB.
+		- Data survives a reset, but not a VM stop or terminate.
+		- VM-specific: cannot be reattached to a different VM. 
+	- RAM disk
+		- tmpfs
+		- faster than local disk, slower than memory.
+			- Use when your application a file system structure and cannot directly store its own memory.
+			- fast scratch disk, or fast cache.
+		- very volatile: erases on stop or restart
+		- May need a larger machine type if RAM was sized for the application.
+		- Consider using a persistant disk to backup ram disk data. 
+	- Persistant disk maximums
+	
+		Machine type	  |	Disk # limits
+		shared-core		  |		16
+		Standard		  |		128
+		high-memory		  |		128
+		high-CPU		  |		128
+		memory-optimized  |		128
+		compute-optimized |		128
 
+	- Persistant disk management differences
+	
+		Cloud Persistant disk		|	Computer Hardware disk
+		Single filesystem is best	|	Partitioning
+		Resize (grow) disks			|	repartition disk
+		resize file system			|	reformat
+		Built-in snapshot service	|	redundant disk arrays
+		Automatic Encryption		|	Subvolume management and snapshots
+									|	Encrypt files before writing to disk
 
-
+	- Common Compute Engine actions
+		- metadata is stored on metadata server.
+		- moving instances to a new zone
+			- Automated processed
+				- Command: gcloud compute instances move
+			- Manual process (moving regions)
+				- snapshot all persistent disks on the source VM.
+				- Create new persistant disks in destination zone restored from snapshots
+				- Create new VM in the destination zone restored from snapshots.
+				- assign static IPs to new VM.
+				- Update references to VM.
+				- Delete the snapshots, original disks, and original VM. 
+		- persistant disk snapshots
+			- Snapshot is not availabl for local SSD
+			- Creates an incremental backup to Cloud Storage.
+				- not visible in your buckets: managed by the snapshot service.
+				- Consider cron jobs for periodic incremental backup.
+			- Snapshots can be restored to a new persistent disk.
+				- New disks can be in another region or zone in the same project.
+				- Basis of VM Migration: "moving" a VM to a new zone. 
+					- Snapshot doesn't backup metadata, tags, etc.
+		- Resize persistent disk.
+			- you can grow a persistant disk but you cannot shrink it. 
 
 
 
