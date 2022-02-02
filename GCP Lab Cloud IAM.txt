@@ -1,0 +1,106 @@
+GCP Lab Cloud IAM
+
+Task 1: Setup 2 users
+1. Sign into the first user. 
+2. Sign into second user in a separate incognito tab. (both users share a password)
+	A. Stay signed into user 1 no matter what or the user 2 account may be deleted.
+
+Task 2: Explore IAM console
+(Do this with user2)
+1. Nav menu > IAM & admin > IAM
+2. Find the names associated with user1 and user2. 
+(switch to user1 tab)
+3. Verify user2 has the Viewer Role.
+
+Task 3: Prepare a resurce for access testing
+1. With User1 go to Cloud Storage > Browser
+2. Create Bucket
+	name 			Must be globally unique
+	Location type 	Multi Region
+3. Click Create
+4. Select Upload Files
+5. Upload a file from the local machine.
+6. Rename the file to sample.txt
+7. Verify project viewer access
+	A. Switch to user2
+	B check the Cloud Storage Browser and make sure the user can view the bucket. 
+	
+Task 4: Remove Project Access
+1. Switch to user1
+2. IAM & admin > IAM
+3. Select user2 > remove
+4. Confirm.
+5. Verify
+	A. Switch to user2
+	B. check cloud storage browser and see user no longer has access.
+	
+
+Task 5: Add storage access.
+1. Copy the value of user2
+2. Switch to user1
+3. IAM & admin > IAM
+4. click ADD 
+	A. Paste the value of user2
+	B. For select a role select Cloud Storage > Storage Object Viewer
+	C. Save
+5. Verify User2 has storage access
+	A. Open CloudShell
+	B Run this commadn with the name of the bucket inserted
+		a. Command: gsutil ls gs://[YOUR_BUCKET_NAME]
+
+Task 6: Set up Service Account User
+1. IAM & admin > Service Accounts
+2. Create Service account
+3. Specify name as read-bucket-objects
+4. Click Create and continue
+5. Specify Role as Cloud Storage > Storage Object Viewer
+6. Continue > Done.
+7 Add the user to the service account
+	A. Select the read-bucket-objects service account
+	B. Click on the "..." > Manage Permissions
+	C. Click on Grant Access and specify the following all other setting should be default
+		Property			Value
+		New Members			altostrat.com
+		Select a role		Service Accounts > Service Account User
+8. Grand Compute Engine Access
+	A. IAM & Admin > IAM
+	B. Add
+	C. Specify the following other properties should be default
+		Property			Value
+		New Members			altostrat.com
+		Select a role		Compute Engine > Compute Instance Admin (v1)
+	D. Save.
+9 Create a VM with the service account.
+	A. Compute Engine > VM Instances
+	B. Create Instance
+	C. Specify the following, leave the remaining as their default
+		Property			Value
+		Name				demoaiam
+		region				us-central1
+		zone				us-central1-c
+		series				N1
+		machine type		f1-micro
+		boot disk			Debian GNU/Linux (buster)
+		Service Account		read-bucket-objects
+
+Task7: Explore the ServicAccountUser Role (you can simulate what the user would experience by just using SSH to access the VM from the Cloud Console.)
+1. For demoiam launch the SSH
+2. command: gcloud compute instances list
+	A. what happened and why? won't work the access is too restrictive to allow access to compute instances list. 
+3. copy the sample.txt from the bucket created earlier
+	A. Command: gsutil cp gs://[YOUR_BUCKET_NAME]/sample.txt .
+3. Rename the file
+	A. Command: mv sample.txt sample2.txt
+4. Attempt to upload the sample2.txt back to the bucket. 
+	A. Command: gsutil cp sample2.txt gs://[YOUR_BUCKET_NAME]
+	B. This will fail as you only have read access with the service account. 
+5. Give the service account access to write to the bucket
+	A. IAM & admin > IAM
+	B. Browse for the lines with read-bucket-objects. 
+	C. Click on the pencil icon. 
+	D. Alter the role to Cloud Storage > Storage Object Creator
+	E. Save
+6. Return to SSH window for demoiam
+	A. Command: gsutil cp sample2.txt gs://[YOUR_BUCKET_NAME]
+7. This should succeed this time. 
+	
